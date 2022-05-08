@@ -1,0 +1,56 @@
+<div id="content">
+  <div id="content-side">
+    <div style="height: 45px; line-height: 35px; margin-bottom: 10px; color: #939393; border-bottom: 1px solid #5fa9e8">List des surveys :
+      <a href="#" class="btn btn-outline-primary" routerLink="/dashboard" style="float: right">Tableau de bord</a></div>
+    <div *ngIf="isEmptySurveyList" class="empty-item">Aucun item</div>
+    <div *ngFor="let survey of surveyList">
+      <a href="" class="survey-item"routerLink="/survey/{{ survey.surveyId }}/question">
+        {{ survey.surveyName }}</a>
+    </div>
+
+  </div>
+
+  <div id="content-primary">
+
+    <h2 class="field-title mb-5">Créer nouveau
+      <!--<a *ngIf="!isEmptySurveyList" href="/#/survey/1/questions"
+         class="btn btn-outline-primary question-add">Ajouter les questio</a> -->
+    </h2>
+
+    <form (ngSubmit)="onSurveySubmit(s)" #s="ngForm">
+
+      <div class="mb-3">
+        <input type="text" name="surveyname" class="form-control" id="" placeholder="Nom du survey" ngModel required>
+      </div>
+
+      <div class="fields-group">
+        <div class="form-floating mb-3">
+          <input type="text" name="surveysubject" class="form-control" id="subject" placeholder="Entrez votre texte" ngModel>
+          <label for="subject">Objet du survey (facultatif)</label>
+        </div>
+      </div>
+
+      <div class="fields-group">
+        <div class="form-floating mb-3">
+          <input type="text" name="surveydescrib" class="form-control" id="describ" placeholder="Entrez votre texte" ngModel>
+          <label for="describ">Description du survey (facultatif)</label>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary survey-add" [disabled]="s.invalid" style="float: right; width: 120px">Créer</button>
+    </form>
+
+  </div>
+</div>
+
+<div class="dialogbox" [hidden]="!displayBox">
+  <div class="backoverlay" (click)="onCancel()"></div>
+  <div class="floatbox">
+    <div class="bxtitle">{{ bxTitle }}</div>
+    <div class="bxcontent"> {{ bxContent }} </div>
+    <div class="bxbtn">
+      <button class="btn btn-outline-primary" (click)="onCancel()">Non</button>
+      <button class="btn btn-danger" (click)="onConfirm()">Oui</button>
+    </div>
+  </div>
+</div>

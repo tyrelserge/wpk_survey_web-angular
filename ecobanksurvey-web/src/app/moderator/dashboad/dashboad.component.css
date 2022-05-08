@@ -1,0 +1,78 @@
+
+.field-title {
+  text-decoration: underline;
+  font-variant-caps: small-caps;
+  /*margin: 20px;*/
+  color: #939393;
+}
+
+.bloc {
+  width: 350px;
+  background: #ffffff;
+  box-shadow: 0px 1px 4px #cec6c6;
+  margin: 10px 0;
+  padding: 10px;
+}
+
+.dashboard-item {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+}
+
+.create-survey {
+  font-size: 12px;
+  width: 100%;
+  padding: 10px 0;
+}
+
+.create-survey table{
+  width: 100%;
+}
+
+.create-survey table td{
+  /*border: 1px solid #939393;*/
+}
+
+.create-survey .bloc-content .bloc-title{
+  color: #5c5c5c;
+}
+
+.create-survey .bloc-icon{
+  text-align: center;
+  vertical-align: center; padding: 20px;
+  border: 1px solid #e7e7e7;
+  background: #fff;
+}
+.create-survey .bloc-icon img{
+  width: 48px;
+  height: 48px;
+}
+
+.create-survey .bloc-content{
+  padding: 10px;
+}
+
+.create-survey .bloc-content .resume-btn {
+  margin-right: 10px;
+}
+
+.create-survey .bloc-content .indicator {
+  color: darksalmon;
+  margin-right: 10px;
+}
+
+.create-survey .bloc-content .label {
+
+}
+
+
+.create-survey .bloc-execute {
+  width: 160px;
+}
+
+.create-survey .btn{
+
+}

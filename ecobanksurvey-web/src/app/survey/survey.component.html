@@ -1,0 +1,116 @@
+<div id="content">
+
+  <div id="content-side" >
+
+    <div class="bloc-item active">
+      <div class="item-surround">
+        <div class="item">?</div>
+      </div>
+      <div class="item-text" style="top: 10px">
+        <p>Demarrer</p>
+      </div>
+    </div>
+
+    <div *ngFor="let question of surveyQuestionList; let i=index;">
+      <div class="bloc-item" [ngClass]="{'active': step>=i+1 }">
+        <div class="item-line"></div>
+        <div class="item-surround">
+          <div class="item">{{ i + 1 }}</div>
+        </div>
+        <div class="item-text">
+          <p>{{ question.surveyQuestionSubject }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bloc-item" [ngClass]="{'active': step>surveyQuestionList.length }">
+      <div class="item-line"></div>
+      <div class="item-surround">
+        <div class="item">Fin</div>
+      </div>
+      <div class="item-text" style="top: 48px">
+        <p>Terminé</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="content-primary">
+
+    <h3 class="survey-title mb-4">Aperçu du survey</h3>
+
+    <div class="survey-bloc">
+      <div class="survey-card">
+
+        <div [hidden]="step!=0">
+          <div class="survey-text"> <p>Etes-vous prêt ?</p> </div>
+          <div class="survey-suggestion"><p style="margin-top: 20px; color: #0082bb">
+              Cliquer sur démarrer pour lancer le questionnaire.</p>
+
+            <p class="remarque">
+              NB: Vous pouvez à tout moment revenir sur une question afin de modifier votre opinion,
+              tant que le questionnaire n'est pas terminé.
+              Notez qu'une fois soumis, aucune autre modification ne sera possible.
+            </p>
+          </div>
+        </div>
+
+        <div [hidden]="surveyQuestionList.length < step">
+          <div class="survey-text">
+            <p>{{ selectedQuestion!=undefined ? selectedQuestion.surveyQuestionContent : ''}}</p>
+          </div>
+          <div class="survey-suggestion">
+            <div >
+
+              <form (ngSubmit)="onSubmitResponseClient(r)" #r="ngForm" style="margin: 20px 0;">
+
+                <div style="color: #0082bb" *ngFor="let suggestion of suggestedResponse; let i=index;">
+
+                  <div class="form-check" *ngIf="selectedQuestion!=undefined && selectedQuestion.surveyQuestionFieldType=='radio'">
+                    <input class="form-check-input" type="radio" name="radioResponse"
+                           value="{{ suggestion.surveyResponseId }}" id="radioResponse{{i}}" [checked]="i==1? true : false" ngModel>
+                    <label class="form-check-label" for="radioResponse{{i}}">{{ suggestion.surveyResponseValue }}</label>
+                  </div>
+
+                  <div class="form-check" *ngIf="selectedQuestion!=undefined && selectedQuestion.surveyQuestionFieldType=='checkbox'">
+                    <input class="form-check-input" type="checkbox" name="{{i}}"
+                           value="{{ suggestion.surveyResponseId }}" id="checkboxResponse{{i}}" ngModel>
+                    <label class="form-check-label" for="checkboxResponse{{i}}">{{ suggestion.surveyResponseValue }}</label>
+                  </div>
+
+                  <div class="form-check form-switch" *ngIf="selectedQuestion!=undefined && selectedQuestion.surveyQuestionFieldType=='switch'">
+                    <input class="form-check-input" type="checkbox" role="switch" name="{{i}}"
+                           value="{{ suggestion.surveyResponseId }}" id="switchResponse{{i}}" [ngModel]="false">
+                    <label for="switchResponse{{i}}">{{ suggestion.surveyResponseValue }}</label>
+                  </div>
+
+                  <div class="form-floating mb-3" *ngIf="selectedQuestion!=undefined && selectedQuestion.surveyQuestionFieldType=='input'">
+                    <input type="text" class="form-control" name="{{i}}"
+                           value="{{ suggestion.surveyResponseId }}" id="inputResponse{{i}}"
+                           placeholder="{{ suggestion.surveyResponseValue }}" value="" ngModel required>
+                    <label for="inputResponse{{i}}">{{ suggestion.surveyResponseValue }}</label>
+                  </div>
+
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div [hidden]="step==0 || step <= surveyQuestionList.length">
+          <div class="survey-text"><p>Terminé</p> </div>
+          <div class="survey-suggestion">
+            <p style="margin-top: 20px; text-align: center; color: #0082bb">Merci de votre participation.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-btn">
+      <button class="btn btn-outline-primary btn-preview" (click)="goPreviewStep(step - 1)">{{ previewBtnText ? previewBtnText : 'Quitter' }}</button>
+      <button class="btn btn-outline-primary btn-next" (click)="onSubmitResponseClient(r)">
+        {{ nextBtnText ? nextBtnText : 'Démarrer' }}</button>
+    </div>
+  </div>
+
+</div>
