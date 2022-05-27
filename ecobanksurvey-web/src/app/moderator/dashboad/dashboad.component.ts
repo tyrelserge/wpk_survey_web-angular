@@ -1,10 +1,10 @@
 import {AfterViewInit, Component, ElementRef, OnInit} from '@angular/core';
-import {Staff} from "../../../models/user.model";
-import {AuthService} from "../../../services/auth.service";
+import {Staff} from "../../models/user.model";
+import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
-import {SurveyServices} from "../../../services/survey.services";
-import {Survey} from "../../../models/survey.model";
-import {UtilsResources} from "../../../services/utils.resources";
+import {SurveyServices} from "../../services/survey.services";
+import {Survey} from "../../models/survey.model";
+import {UtilsResources} from "../../services/utils.resources";
 
 declare const diagramJsInit: any;
 

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {NgForm} from "@angular/forms";
-import {SurveyServices} from "../../../services/survey.services";
+import {SurveyServices} from "../../services/survey.services";
 import {Router} from "@angular/router";
-import {Survey} from "../../../models/survey.model";
-import {Client, ClientSurvey, Staff} from "../../../models/user.model";
-import {AuthService} from "../../../services/auth.service";
+import {Survey} from "../../models/survey.model";
+import {Client, ClientSurvey, Staff} from "../../models/user.model";
+import {AuthService} from "../../services/auth.service";
 
 declare const acreenInit: any;
 

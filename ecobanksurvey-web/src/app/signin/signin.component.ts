@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {NgForm} from "@angular/forms";
-import {UserService} from "../../services/user.service";
-import {AuthService} from "../../services/auth.service";
-import {Staff} from "../../models/user.model";
+import {UserService} from "../services/user.service";
+import {AuthService} from "../services/auth.service";
+import {Staff} from "../models/user.model";
 
 declare const acreenInit: any;
 

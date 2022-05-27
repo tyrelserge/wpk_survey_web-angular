@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {Survey, SurveyQuestion, SurveyResponse, SelectedResponses} from "../../models/survey.model";
+import {Survey, SurveyQuestion, SurveyResponse, SelectedResponses} from "../models/survey.model";
 import {ActivatedRoute, Router} from "@angular/router";
-import {SurveyServices} from "../../services/survey.services";
+import {SurveyServices} from "../services/survey.services";
 import {NgForm} from "@angular/forms";
-import {ClientSurvey} from "../../models/user.model";
+import {ClientSurvey} from "../models/user.model";
 import {callback} from "chart.js/helpers";
 
 declare const acreenInit: any;

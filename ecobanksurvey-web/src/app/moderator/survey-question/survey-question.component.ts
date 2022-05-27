@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import {FormGroup, NgForm} from "@angular/forms";
-import {SurveyServices} from "../../../services/survey.services";
-import {Survey, SurveyQuestion, SurveyResponse} from "../../../models/survey.model";
+import {SurveyServices} from "../../services/survey.services";
+import {Survey, SurveyQuestion, SurveyResponse} from "../../models/survey.model";
 import {ActivatedRoute, Router} from "@angular/router";
 import readXlsxFile from "read-excel-file";
 // @ts-ignore
 import Any = jasmine.Any;
-import {Client, ClientSurvey, Staff} from "../../../models/user.model";
-import {AuthService} from "../../../services/auth.service";
-import {UtilsResources} from "../../../services/utils.resources";
+import {Client, ClientSurvey, Staff} from "../../models/user.model";
+import {AuthService} from "../../services/auth.service";
+import {UtilsResources} from "../../services/utils.resources";
 
 declare const acreenInit: any;
 

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Question, Survey } from "../../../../models/survey.model";
+import { Question, Survey } from "../../../models/survey.model";
 import {ActivatedRoute, Router} from "@angular/router";
-import {AuthService} from "../../../../services/auth.service";
-import {SurveyServices} from "../../../../services/survey.services";
+import {AuthService} from "../../../services/auth.service";
+import {SurveyServices} from "../../../services/survey.services";
 
 @Component({
   selector: 'app-analysis-table',
