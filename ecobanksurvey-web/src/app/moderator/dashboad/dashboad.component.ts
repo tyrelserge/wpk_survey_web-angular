@@ -4,6 +4,9 @@ import {AuthService} from "../../../services/auth.service";
 import {Router} from "@angular/router";
 import {SurveyServices} from "../../../services/survey.services";
 import {Survey} from "../../../models/survey.model";
+import {UtilsResources} from "../../../services/utils.resources";
+
+declare const diagramJsInit: any;
 
 @Component({
   selector: 'app-dashboad',
@@ -12,9 +15,15 @@ import {Survey} from "../../../models/survey.model";
 })
 export class DashboadComponent implements OnInit, AfterViewInit {
 
+  today = new Date();
+
   user: Staff = new Staff();
   userId: number | undefined;
   surveyList: Survey[] = new Array<Survey>();
+  surveyPublished: Survey[] = new Array<Survey>();
+  surveyCompleted: Survey[] = new Array<Survey>();
+
+  surveyId: number | undefined;
 
   constructor(private elementRef: ElementRef,
               private authService: AuthService,
@@ -28,23 +37,30 @@ export class DashboadComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
 
+    diagramJsInit(UtilsResources.baseUrl);
+
     if (!this.authService.checkAuth()) this.router.navigate(['/']);
+
     //this.authService.isAuth = this.authService.checkAuth();
     //if (!this.authService.isAuth) this.router.navigate(['/']);
     // @ts-ignore
     this.user = <Staff>(JSON.parse(localStorage.getItem('user')));
     this.userId = this.user.staffId;
-    let self = this;
 
     this.surveyServive.getSurveysList((data) => {
-
       for (let survey of data) {
         if (survey.surveyStatus!='deleted') {
           this.surveyList.push(survey);
+          if (survey.surveyStatus=='published' || survey.surveyStatus=='completed') {
+            this.surveyPublished.push(survey);
+            if (survey.surveyStatus=='completed') {
+              this.surveyCompleted.push(survey);
+            }
+          }
         }
       }
-
     });
+
   }
 
 }

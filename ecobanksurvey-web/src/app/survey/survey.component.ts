@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {SurveyQuestion, SurveyResponse} from "../../models/survey.model";
+import {Survey, SurveyQuestion, SurveyResponse, SelectedResponses} from "../../models/survey.model";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SurveyServices} from "../../services/survey.services";
 import {NgForm} from "@angular/forms";
 import {ClientSurvey} from "../../models/user.model";
+import {callback} from "chart.js/helpers";
+
+declare const acreenInit: any;
 
 @Component({
   selector: 'app-survey',
@@ -12,6 +15,7 @@ import {ClientSurvey} from "../../models/user.model";
 })
 export class SurveyComponent implements OnInit {
 
+  survey: Survey | undefined;
   surveyQuestionList: SurveyQuestion[] = new Array<SurveyQuestion>();
   selectedQuestion: SurveyQuestion | undefined;
   suggestedResponse: SurveyResponse[] = new Array<SurveyResponse>();
@@ -31,12 +35,17 @@ export class SurveyComponent implements OnInit {
   endSurvey: boolean = false;
   startSurvey: boolean = false;
   clientResponse: ClientSurvey | undefined;
+  hidenext: boolean = false;
+  selectedResponses: SelectedResponses[] = new Array<SelectedResponses>();
 
   constructor(private route: ActivatedRoute,
               private surveyServices: SurveyServices,
               private router: Router) { }
 
   ngOnInit(): void {
+
+    acreenInit();
+
     this.currentUrl = this.router.url;
 
     this.surveyId = this.route.snapshot.params['surveyId'];
@@ -45,6 +54,10 @@ export class SurveyComponent implements OnInit {
     this.token = this.route.snapshot.params['token'];
     this.lang = this.route.snapshot.params['lang'];
     this.country = this.route.snapshot.params['country'];
+
+    this.surveyServices.getSurvey(this.surveyId, data => {
+      this.survey = data;
+    });
 
     this.route.queryParamMap.subscribe((params) => {
       let param:string | null = params.get('step');
@@ -75,7 +88,13 @@ export class SurveyComponent implements OnInit {
     }
 
     if (step > this.surveyQuestionList.length + 1) {
-      this.router.navigate(['/dashboard']);
+      if (this.action!='preview') {
+        this.surveyServices.endClientResponse(this.token, data => {
+          this.router.navigate(['/dashboard']);
+        })
+      } else {
+        this.router.navigate(['/dashboard']);
+      }
     }
   }
 
@@ -94,24 +113,30 @@ export class SurveyComponent implements OnInit {
 
   private stepManager(step: number) {
 
-    this.surveyServices.getClientSurveyResponses(this.token, data => {
-      this.clientResponse = data;
-    })
-
+    this.selectedResponses = new Array<SelectedResponses>();
     this.selectedQuestion = new SurveyQuestion();
     this.suggestedResponse = new Array<SurveyResponse>();
 
     this.endSurvey = false;
     this.startSurvey = false;
 
-    if (step==0) {
+    this.surveyServices.getClientSurveyResponses(this.token, data => {
+      if (this.action != 'preview' && data.clientSurveyStatus == 'completed') {
+        this.step = this.surveyQuestionList.length + 1;
+        this.hidenext = true;
+      } else {
+        this.clientResponse = data;
+      }
+    })
+
+    if (step == 0) {
       this.nextBtnText = "Démarrer";
       this.previewBtnText = 'Quitter';
       this.startSurvey = true;
-    } else if (step==1) {
+    } else if (step == 1) {
       this.previewBtnText = "Quitter";
       this.nextBtnText = "Suivant";
-      this.selectedQuestion = this.surveyQuestionList[step-1];
+      this.selectedQuestion = this.surveyQuestionList[step - 1];
       this.suggestedResponse = this.selectedQuestion.suggestedResponse;
     } else if (step > this.surveyQuestionList.length) {
       this.nextBtnText = "Quitter";
@@ -119,56 +144,66 @@ export class SurveyComponent implements OnInit {
       this.endSurvey = true;
     } else {
       // @ts-ignore
-      this.selectedQuestion = this.surveyQuestionList[step-1];
+      this.selectedQuestion = this.surveyQuestionList[step - 1];
       this.suggestedResponse = this.selectedQuestion.suggestedResponse;
       this.nextBtnText = "Suivant";
       this.previewBtnText = "Précédent";
+    }
+
+    if (this.selectedQuestion.surveyQuestionId!=undefined) {
+      this.surveyServices.getSelectedResponseDetails(
+        this.token, this.selectedQuestion?.surveyQuestionId, (data) => {
+          this.selectedResponses = data;
+        });
     }
   }
 
   onSubmitResponseClient(responseForm: NgForm) {
 
-    console.log(responseForm.value);
-
-    let responseId = undefined;
-    let details = responseForm.value['details'];
-
-    let fieldsType: string | undefined = this.selectedQuestion ? this.selectedQuestion.surveyQuestionFieldType : undefined;
+    let fieldsType: string | undefined = this.selectedQuestion?.surveyQuestionFieldType;
 
     switch (fieldsType) {
 
       case 'radio':
-        this.prepareResponseClient(this.token, this.suggestedResponse, ()=>{
-          this.sendResponseClient(this.suggestedResponse[0].surveyQuestionId, responseForm.value['radioResponse'], details);
+        this.surveyServices.removeClientResponse(this.token, this.selectedQuestion?.surveyQuestionId, ()=> {
+          for (let i = 0; i < this.suggestedResponse.length; i++) {
+            let value: string = 'false';
+            if (responseForm.value['radioResponse'] == this.suggestedResponse[i].surveyResponseId) value = 'true';
+            this.sendResponseClient(this.suggestedResponse[i].surveyQuestionId, this.suggestedResponse[i].surveyResponseId, value);
+          }
           this.goNextStep(this.step + 1);
         });
         break;
 
       case 'checkbox':
-        this.prepareResponseClient(this.token, this.suggestedResponse, ()=>{
-          for (let i=0; i<this.suggestedResponse.length; i++) {
-            if (responseForm.value[i]==true) {
-              this.sendResponseClient(this.suggestedResponse[i].surveyQuestionId, this.suggestedResponse[i].surveyResponseId, details);
-            }
-          } this.goNextStep(this.step + 1);
+        this.surveyServices.removeClientResponse(this.token, this.selectedQuestion?.surveyQuestionId, ()=> {
+          for (let i = 0; i < this.suggestedResponse.length; i++) {
+            let value: string = 'false';
+            if (responseForm.value[i] == true) value = 'true';
+            this.sendResponseClient(this.suggestedResponse[i].surveyQuestionId, this.suggestedResponse[i].surveyResponseId, value);
+          }
+          this.goNextStep(this.step + 1);
         });
         break;
 
       case 'switch':
-        this.prepareResponseClient(this.token, this.suggestedResponse, ()=> {
-          for (let i=0; i<this.suggestedResponse.length; i++) {
-            details = responseForm.value[i]==true ? 'true' : 'false';
-            this.sendResponseClient(this.suggestedResponse[i].surveyQuestionId, this.suggestedResponse[i].surveyResponseId, details);
-          } this.goNextStep(this.step + 1);
+        this.surveyServices.removeClientResponse(this.token, this.selectedQuestion?.surveyQuestionId, ()=> {
+          for (let i = 0; i < this.suggestedResponse.length; i++) {
+            let value: string = 'false';
+            if (responseForm.value[i] == true) value = 'true';
+            this.sendResponseClient(this.suggestedResponse[i].surveyQuestionId, this.suggestedResponse[i].surveyResponseId, value);
+          }
+          this.goNextStep(this.step + 1);
         });
         break;
 
       case 'input':
-        this.prepareResponseClient(this.token, this.suggestedResponse, ()=> {
+        this.surveyServices.removeClientResponse(this.token, this.selectedQuestion?.surveyQuestionId, ()=> {
           for (let i = 0; i < this.suggestedResponse.length; i++) {
-            details = responseForm.value[i];
-            this.sendResponseClient(this.suggestedResponse[i].surveyQuestionId, this.suggestedResponse[i].surveyResponseId, details);
-          } this.goNextStep(this.step + 1);
+            let value: string = responseForm.value[i];
+            this.sendResponseClient(this.suggestedResponse[i].surveyQuestionId, this.suggestedResponse[i].surveyResponseId, value);
+          }
+          this.goNextStep(this.step + 1);
         });
         break;
 
@@ -176,19 +211,12 @@ export class SurveyComponent implements OnInit {
         this.goNextStep(this.step + 1);
         break;
     }
-
   }
 
   private sendResponseClient(questionId: number | undefined, responseId: number | undefined, details: string) {
-    this.surveyServices.saveClientResponse(this.token, questionId, responseId, details, (data) => {});
-  }
-
-  private prepareResponseClient(tokenCode: string | undefined, responses: SurveyResponse[], callback:()=>void) {
-    for (let i=0; i<responses.length; i++) {
-      this.surveyServices.removeClientResponse(tokenCode, this.suggestedResponse[i].surveyQuestionId,
-        this.suggestedResponse[i].surveyResponseId, (data)=>{});
-    }
-    callback();
+    this.surveyServices.saveClientResponse(this.token, questionId, responseId, details, (data) => {
+      this.clientResponse = data;
+    });
   }
 
 }

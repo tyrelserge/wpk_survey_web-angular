@@ -3,7 +3,7 @@
 
   <div id="content-side">
     <div style="height: 45px; line-height: 35px; margin-bottom: 10px; color: #939393; border-bottom: 1px solid #5fa9e8">Questions du survey :
-      <a href="#" class="btn btn-outline-primary" routerLink="/survey/manager" style="float: right">Retour</a></div>
+      <a href="#" class="btn btn-outline-primary" routerLink="/dashboard" style="float: right">Tableau de bord</a></div>
     <div *ngIf="isEmptyQuestionList" class="empty-item">Aucun item</div>
     <div *ngFor="let question of questionsList">
       <a href="#" class="question-item" (click)="onEditeQuestionItem(question.surveyQuestionId)"
@@ -26,6 +26,7 @@
       <button class="btn btn-outline-success" (click)="onClicPublishSurvey(surveyId)">Publier</button>
       <button class="btn btn-outline-primary" (click)="onEditSurvey(surveyId)">Modifier</button>
       <button class="btn btn-outline-danger" (click)="onDeleteSurvey(surveyId)">Supprimer</button>
+      <a href="#" class="btn btn-outline-secondary" routerLink="/survey/manager" style="float: right">Quitter</a>
     </div>
 
     <div [hidden]="selfSurveyManager">
@@ -108,7 +109,7 @@
 
             <div class="form-check form-switch" *ngIf="selectedQuestion.surveyQuestionFieldType=='switch'">
               <input class="form-check-input" type="checkbox" role="switch" name="switchResponse{{i}}" id="switchResponse{{i}}">
-              <label for="switchResponse{{i}}">{{ suggestion.surveyResponseValue }}</label>
+              <label for="switchResponse{{i}}">{{ '[ Non | Oui ] - ' + suggestion.surveyResponseValue }}</label>
             </div>
 
           </div>
@@ -209,15 +210,15 @@
 
           <div class="form-floating mb-2">
             <textarea class="form-control" name="message" style="height: 90px"
-                      placeholder="Entrez votre texte" id="message" ngModel required></textarea>
+                      placeholder="Entrez votre texte" id="message" [(ngModel)]="writingMsg" required></textarea>
             <label for="message">Message</label>
           </div>
 
-          <button type="submit" class="btn btn-primary" [disabled]="p.invalid" style="float: right">Publier</button>
+          <button type="button" class="btn btn-outline-info" (click)="insertLink(p)">Inserer le lien</button>
+          <button type="submit" class="btn btn-primary" [disabled]="p.invalid" style="width:120px; float: right">Publier</button>
         </form>
       </div>
 
-      <div style="clear: both; margin-bottom: 40px"></div>
       <hr>
 
       <div class="address-list">
@@ -269,91 +270,105 @@
         <div *ngIf="allClient.length==0 && clientRecord.length==0" class="empty-item">Aucun item</div>
 
         <div class="address-items" *ngIf="!uploaded && clientRecord.length!=0">
-
           <h6>Importation:</h6>
 
-          <table>
-            <thead>
-            <tr>
-              <td>N°</td>
-              <td>Nom</td>
-              <td>Mobile</td>
-              <td>E-mail</td>
-              <td>Pays</td>
-              <td>Code pays</td>
-              <td>Vile</td>
-              <td>Adresse</td>
-              <td>Langue</td>
-            </tr>
-            </thead>
+          <form (ngSubmit)="onSubmitUploadAddressList(uploadForm)" #uploadForm="ngForm">
 
-            <tbody *ngFor="let client of clientRecord; let i=index;">
-            <tr>
-              <td>{{ i + 1 }}</td>
-              <td>{{ client.name }}</td>
-              <td>{{ client.mobile }}</td>
-              <td>{{ client.email }}</td>
-              <td>{{ client.country }}</td>
-              <td>{{ client.countryCode }}</td>
-              <td>{{ client.city }}</td>
-              <td>{{ client.address }}</td>
-              <td>{{ client.language }}</td>
-            </tr>
-            </tbody>
-          </table>
+            <table>
+              <thead>
+              <tr>
+                <td>N°</td>
+                <td>Nom</td>
+                <td>Mobile</td>
+                <td>E-mail</td>
+                <td>Pays</td>
+                <td>Code pays</td>
+                <td>Vile</td>
+                <td>Adresse</td>
+                <td>Langue</td>
+              </tr>
+              </thead>
 
-          <div class="save-bar">
-            <button class="btn btn-outline-primary" (click)="onUploadAddressList()"
-                    style="float: right">Charger la liste</button>
-          </div>
+              <tbody *ngFor="let client of clientRecord; let i=index;">
+              <tr>
+                <td><input type="checkbox" name="{{ i }}" id="{{ i }}" [ngModel]="true"></td>
+                <td><label for="{{ i }}">{{ i + 1 }}</label></td>
+                <td><label for="{{ i }}">{{ client.name }}</label></td>
+                <td><label for="{{ i }}">{{ client.mobile }}</label></td>
+                <td><label for="{{ i }}">{{ client.email }}</label></td>
+                <td><label for="{{ i }}">{{ client.country }}</label></td>
+                <td><label for="{{ i }}">{{ client.countryCode }}</label></td>
+                <td><label for="{{ i }}">{{ client.city }}</label></td>
+                <td><label for="{{ i }}">{{ client.address }}</label></td>
+                <td><label for="{{ i }}">{{ client.language }}</label></td>
+              </tr>
+              </tbody>
+            </table>
+
+            <div class="save-bar">
+              <button class="btn btn-outline-primary" type="submit" style="float: right">Charger la liste</button>
+            </div>
+
+            <!--  (click)="onUploadAddressList()" -->
+          </form>
         </div>
 
         <div class="address-items" *ngIf="allClient.length!=0">
 
           <h6>List des destinataires: </h6>
 
-          <table>
-            <thead>
-            <tr>
-              <td>N°</td>
-              <td>Nom</td>
-              <td>Mobile</td>
-              <td>E-mail</td>
-              <td>Pays</td>
-              <td>Code pays</td>
-              <td>Vile</td>
-              <td>Adresse</td>
-              <td>Langue</td>
-            </tr>
-            </thead>
+          <form (ngSubmit)="onSubmitGenerateClientLink(linkForm)" #linkForm=ngForm>
 
-            <tbody *ngFor="let client of allClient; let i=index;">
-            <tr>
-              <td>{{ i + 1 }}</td>
-              <td>{{ client.clientName }}</td>
-              <td>{{ client.clientPhone }}</td>
-              <td>{{ client.clientEmail }}</td>
-              <td>{{ client.clientCountry }}</td>
-              <td>{{ client.clientCountryCode }}</td>
-              <td>{{ client.clientCity }}</td>
-              <td>{{ client.clientAddress }}</td>
-              <td>{{ client.clientLanguage }}</td>
-            </tr>
-            </tbody>
-          </table>
+            <table>
+              <thead>
+              <tr>
+                <td></td>
+                <td>N°</td>
+                <td>Nom</td>
+                <td>Mobile</td>
+                <td>E-mail</td>
+                <td>Pays</td>
+                <td>Code pays</td>
+                <td>Vile</td>
+                <td>Adresse</td>
+                <td>Langue</td>
+              </tr>
+              </thead>
 
-          <p><strong>NB:</strong> Un token sera généré à généré pour chaque destinataire.
-            Vous pouvez ainsi définir le délais de validité des tokens de cette liste.</p>
+              <tbody *ngFor="let client of allClient; let i=index;">
 
-          <div class="save-bar">
-            <form #token_date="ngForm">
+              <tr>
+                <td style="padding-right: 10px">
+                    <input type="checkbox" name="{{ i }}" id="{{ client.clientId }}" [ngModel]="true">
+                </td>
+                <td><label for="{{ client.clientId }}">{{ i + 1 }}</label></td>
+                <td><label for="{{ client.clientId }}">{{ client.clientName }}</label></td>
+                <td><label for="{{ client.clientId }}">{{ client.clientPhone }}</label></td>
+                <td><label for="{{ client.clientId }}">{{ client.clientEmail }}</label></td>
+                <td><label for="{{ client.clientId }}">{{ client.clientCountry }}</label></td>
+                <td><label for="{{ client.clientId }}">{{ client.clientCountryCode }}</label></td>
+                <td><label for="{{ client.clientId }}">{{ client.clientCity }}</label></td>
+                <td><label for="{{ client.clientId }}">{{ client.clientAddress }}</label></td>
+                <td><label for="{{ client.clientId }}">{{ client.clientLanguage }}</label></td>
+              </tr>
+              </tbody>
+            </table>
+
+            <p><strong>NB:</strong> Un token sera généré à généré pour chaque destinataire.
+              Vous pouvez ainsi définir le délais de validité des tokens de cette liste.</p>
+
+            <div class="save-bar">
+              <!--<form #token_date="ngForm">-->
               <label for="to">Expiration du Token :</label>
-              <input type="date" name="to" class="form-control field-date" (change)="pickupDate(token_date)"
-                     placeholder="Expiration token" id="to" ngModel="{{ today | date: 'yyyy-MM-dd' }}" required>
+              <input type="date" name="to" class="form-control field-date" (change)="pickupDate(linkForm)"
+                     placeholder="Expiration token" id="to" ngModel="{{ today | date: 'yyyy-MM-dd' }}" required ngModel>
               <span for="to" style="color: #5fa9e8">{{ expirationToken!=7 ? expirationToken + (expirationToken && expirationToken > 1 ? ' jours':' jour')  : '7 jours (par defaut)' }}</span>
-              <button class="btn btn-outline-success" (click)="onGenerateClientLink(surveyId)" style="float: right">Générer les liens</button>
-            </form>
-          </div>
+              <!-- <button class="btn btn-outline-success" (click)="onGenerateClientLink(surveyId)" style="float: right">Générer les liens</button> -->
+              <!--</form>-->
+              <button class="btn btn-outline-success" type="submit" style="float: right">Générer les liens</button>
+            </div>
+
+          </form>
         </div>
 
       </div>

@@ -24,14 +24,18 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.css",
+              "src/assets/diagram/c3-0.7.20/c3.css",
               "src/styles.css"
             ],
             "scripts": [
-              "src/assets/js/screen.js"
+              "src/assets/diagram/d3.v5.min.js",
+              "src/assets/diagram/c3-0.7.20/c3.js",
+              "src/assets/js/screen.js",
+              "src/assets/js/diagram.js"
             ]
           },
           "configurations": {
@@ -39,8 +43,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",

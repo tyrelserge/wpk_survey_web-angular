@@ -10,6 +10,8 @@ import {Client, ClientSurvey, Staff} from "../../../models/user.model";
 import {AuthService} from "../../../services/auth.service";
 import {UtilsResources} from "../../../services/utils.resources";
 
+declare const acreenInit: any;
+
 @Component({
   selector: 'app-survey-question',
   templateUrl: './survey-question.component.html',
@@ -61,6 +63,7 @@ export class SurveyQuestionComponent implements OnInit {
   bxContent: string | undefined;
   bxAction: string | undefined;
   affected: string | undefined;
+  writingMsg: string = '';
 
   constructor(private authService: AuthService,
               private surveyServices: SurveyServices,
@@ -68,6 +71,8 @@ export class SurveyQuestionComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit(): void {
+
+    acreenInit();
 
     if (!this.authService.checkAuth()) this.router.navigate(['/']);
 
@@ -203,7 +208,10 @@ export class SurveyQuestionComponent implements OnInit {
   }
 
   onResponseSubmit(form: NgForm) {
+    //if (this.selectedQuestion.surveyQuestionFieldType==='switch')
+      //form.value['responsesuggestion'] = form.value['responsesuggestion'] + ' [ Non | Oui ]';
     this.surveyServices.saveResponseSuggestion(form, (data: SurveyResponse) => {
+      //data.surveyResponseValue = '[ Non | Oui ] ' + data.surveyResponseValue;
       if (this.suggestedResponse==null) {
         this.suggestedResponse = [data];
       } else {
@@ -368,32 +376,31 @@ export class SurveyQuestionComponent implements OnInit {
     this.expirationToken = days;
   }
 
-  onUploadAddressList() {
+  onSubmitUploadAddressList(uploadForm: NgForm) {
     this.uploaded = true;
-    for (let client of this.clientRecord) {
-      this.surveyServices.saveClient(client, this.expirationToken, (data) => {
-        this.clientList.push(data);
-        this.allClient.push(data);
-        //this.surveyServices.createSurveyClient(data.clientId, this.surveyId, this.expirationToken, (data2) => {
-          //this.clientSurveyList.push(data2);
-        //});
-      });
+    for (let i=0; i<this.clientRecord.length; i++) {
+      if (uploadForm.value[i]) {
+        this.surveyServices.saveClient(this.clientRecord[i], (data) => {
+          this.clientList.push(data);
+          this.allClient.push(data);
+        });
+      }
     }
   }
-
-  onGenerateClientLink(surveyId: number | undefined) {
+  onSubmitGenerateClientLink(gForm: NgForm) {
 
     let self = this;
 
     for (let i=0; i<this.allClient.length; i++) {
-      this.surveyServices.createSurveyClient(this.allClient[i].clientId, surveyId, this.expirationToken, (data) => {
-        this.clientSurveyList.push(data);
-      });
-
+      if (gForm.value[i]==true) {
+        this.surveyServices.createSurveyClient(this.allClient[i].clientId, this.surveyId, this.expirationToken, (data) => {
+          this.clientSurveyList.push(data);
+        });
+      }
       if (i>=this.allClient.length -1) {
-          setTimeout(function () {
-            self.onClicPublishSurvey(surveyId);
-          }, 2000)
+        setTimeout(function () {
+          self.onClicPublishSurvey(self.surveyId);
+        }, 2000)
       }
     }
   }
@@ -408,9 +415,6 @@ export class SurveyQuestionComponent implements OnInit {
             this.clientList.push(client);
         }
       }
-
-      console.log(this.clientList[11])
-      console.log(this.clientSurveyList[11])
     });
   }
 
@@ -466,5 +470,9 @@ export class SurveyQuestionComponent implements OnInit {
           p.resetForm();
         });
     }
+  }
+
+  insertLink(msgForm: NgForm) {
+    this.writingMsg = msgForm.value['message'] + ' **lien** ';
   }
 }

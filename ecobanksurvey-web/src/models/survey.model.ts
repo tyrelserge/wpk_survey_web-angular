@@ -28,3 +28,25 @@ export class SurveyResponse {
   surveyResponseStatus: string | undefined;
 }
 
+export class GroupedResponses {
+  surveyId: number | undefined;
+  questions: Question[] = new Array<Question>();
+}
+
+export class Question {
+  surveyQuestionId: number | undefined;
+  surveyId: number | undefined;
+  surveyQuestionSubject: string | undefined;
+  surveyQuestionContent: string | undefined;
+  surveyQuestionFieldType: string | undefined;
+  surveyQuestionDate: string | undefined;
+  surveyQuestionStatus: string | undefined;
+  suggestions: SurveyResponse[] = new Array<SurveyResponse>();
+  responses: SelectedResponses[] = new Array<SelectedResponses>()
+}
+
+export class SelectedResponses {
+  surveyResponseId: number | undefined;
+  surveyResponseDetails: string | undefined;
+}
+

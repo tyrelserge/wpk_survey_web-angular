@@ -5,19 +5,38 @@
   position: relative;
 }
 
-#content #side {
+#content #content-side {
   width: 50%;
+  min-height: 300px;
   border-right: 1px solid #e1e1e1;
   padding-right: 20px;
   overflow: auto;
 }
 
-#content #primary {
+#content #content-primary {
   width: 50%;
   padding-left: 20px;
 }
 
-#content #side .empty-item {
+
+/* Works on Chrome, Edge, and Safari */
+#content #content-side::-webkit-scrollbar {
+  width: 1px;
+  scrollbar-width: thin;
+  scrollbar-color: blue orange;
+}
+
+*::-webkit-scrollbar-track {
+  background: #d9d9d9;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: blue;
+  border-radius: 20px;
+  border: 3px solid #74cb61;
+}
+
+#content #content-side .empty-item {
   text-align: center;
   color: #b4b4b4;
 }
@@ -38,7 +57,8 @@
   width: 320px;
   position: relative;
   top: 0px;
-  left: 130px;
+  left: 148px;
+  margin-top: 10px;
   border-radius: 10px;
   background-color: rgba(255,255,255,0.6);
 }
@@ -50,7 +70,7 @@
 .form-connexion {
   width: 300px;
   position: relative;
-  top: 80px;
+  top: 96px;
   left: 80px;
   border-radius: 10px;
   background-color: rgba(255,255,255,0.6);

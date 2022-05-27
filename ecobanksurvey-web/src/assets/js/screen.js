@@ -1,10 +1,6 @@
-function init() {
-  this.windowResize();
-  window.addEventListener('resize', windowResize);
-}
-
-windowResize = function() {
-    contentSideResize();
+function acreenInit() {
+  this.contentSideResize();
+  window.addEventListener('resize', contentSideResize);
 }
 
 contentSideResize = function() {
@@ -30,12 +26,6 @@ contentSideResize = function() {
     sideHeight = contentPrimaryElem.offsetHeight;
   }
 
-  sideElement.style.height = sideHeight + 'px';
-
-  setTimeout(function () {
-    contentSideResize()
-  }, 5000)
+  contentElement.style.height = sideHeight + 'px';
 
 }
-
-window.onload = init;

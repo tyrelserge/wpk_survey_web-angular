@@ -18,6 +18,8 @@ import {GuardService} from "../services/guard.service";
 import {AuthService} from "../services/auth.service";
 import {UserService} from "../services/user.service";
 import { DashboadComponent } from './moderator/dashboad/dashboad.component';
+import {NgChartsModule} from "ng2-charts";
+import { AnalysisTableComponent } from './moderator/dashboad/analysis-table/analysis-table.component';
 
 const appRoutes: Routes = [
   { path: 'connexion', component: SigninComponent },
@@ -27,6 +29,7 @@ const appRoutes: Routes = [
   { path: 'survey/:surveyId/:action/:tamplate/:token/:country/lang/:lang', component: SurveyComponent },
 
   { path: 'dashboard', component: DashboadComponent },
+  { path: 'dashboard/survey/:surveyId', component: AnalysisTableComponent },
   { path: 'survey/manager', component: SurveyResourceComponent },
   { path: 'survey/:surveyId/:option', component: SurveyQuestionComponent },
   { path: 'survey/:surveyId/:option/:action',  component: SurveyQuestionComponent },
@@ -47,14 +50,15 @@ const appRoutes: Routes = [
     SurveyComponent,
     SurveyResourceComponent,
     UnallowedComponent,
-    DashboadComponent
+    DashboadComponent,
+    AnalysisTableComponent
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes, { useHash: true }),
     FormsModule,
     HttpClientModule
-  ],
+],
   providers: [
     AuthService,
     GuardService,

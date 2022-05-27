@@ -32,10 +32,9 @@ export class ClientSurvey {
   updatedOn: string | undefined;
   clientSurveyStatus: string | undefined;
   selectedResponses: SelectedResponses[] = new Array<SelectedResponses>();
-  //surveyResponses: SurveyResponse[] = new Array<SurveyResponse>();
 }
 
-class SelectedResponses {
+export class SelectedResponses {
   tokenCode: string | undefined;
   surveyQuestionId: number | undefined;
   surveyResponseId: number | undefined;

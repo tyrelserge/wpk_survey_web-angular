@@ -5,6 +5,8 @@ import {UserService} from "../../services/user.service";
 import {AuthService} from "../../services/auth.service";
 import {Staff} from "../../models/user.model";
 
+declare const acreenInit: any;
+
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
@@ -17,6 +19,9 @@ export class SigninComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit(): void {
+
+    acreenInit();
+
     this.authService.isAuth = this.authService.checkAuth();
     if (this.authService.isAuth) this.router.navigate(['/dashboard']);
   }

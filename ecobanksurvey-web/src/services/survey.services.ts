@@ -3,10 +3,10 @@ import {NgForm} from "@angular/forms";
 import {UtilsResources} from "./utils.resources";
 import {Router} from "@angular/router";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Survey, SurveyQuestion, SurveyResponse} from "../models/survey.model";
+import {SelectedResponses, GroupedResponses, Survey, SurveyQuestion, SurveyResponse} from "../models/survey.model";
 import {ResponseInterface} from "../models/response.interface";
 import {error} from "@angular/compiler/src/util";
-import {Client, ClientSurvey} from "../models/user.model";
+import {Client, ClientSurvey } from "../models/user.model";
 // @ts-ignore
 import Any = jasmine.Any;
 
@@ -171,14 +171,12 @@ export class SurveyServices {
       error => console.error('There was an error !', error));
   }
 
-  removeClientResponse(token: string | undefined,
-                       questionId: number | undefined,
-                       responseId: number | undefined, callback: (data: ClientSurvey) => void) {
+  removeClientResponse(token: string | undefined, questionId: number | undefined, callback: () => void) {
 
-    let url = UtilsResources.baseUrl + '/survey/client/'+ token +'/question/'+ questionId +'/response/' + responseId;
+    let url = UtilsResources.baseUrl + '/survey/client/'+ token +'/question/'+ questionId +'/responses';
 
     this.httpClient.delete<ResponseInterface>(url).subscribe(
-      data => {},
+      data => callback(),
       error => console.error('There was an error !', error));
   }
 
@@ -269,7 +267,7 @@ export class SurveyServices {
       error => console.error('There was an error !', error));
   }
 
-  saveClient(client: Any, expiration: number | undefined, callback: (data: Client) => void) {
+  saveClient(client: Any, callback: (data: Client) => void) {
 
     let url = UtilsResources.baseUrl + '/client';
 
@@ -375,4 +373,59 @@ export class SurveyServices {
       error => console.error('There was an error !', error));
   }
 
+  endClientResponse(token: string | undefined, callback: (data:ClientSurvey) => void) {
+
+    let url = UtilsResources.baseUrl + '/survey/client/response/end';
+
+    let params = {
+      "tokenCode" : token
+    }
+
+    let headers = new HttpHeaders({
+      'Content-type': 'application/json'
+    });
+
+    this.httpClient.post<ResponseInterface>(url, params, {headers}).subscribe(
+      data => {
+        if (data.statusCode == UtilsResources.SUCCESS) {
+          callback(data.response);
+        } else {
+          console.error('Not data found', data);
+        }
+      },
+      error => console.error('There was an error !', error));
+  }
+
+  getSurveyGroupedResponses(surveyId: number, callback: (data: GroupedResponses) => void) {
+
+    let url = UtilsResources.baseUrl + '/survey/'+ surveyId +'/responses';
+
+    this.httpClient.get<ResponseInterface>(url).subscribe(
+      data => {
+        if (data.statusCode == UtilsResources.SUCCESS) {
+          callback(data.response);
+        } else {
+          console.error('Not question found', data);
+        }
+      },
+      error => console.error('There was an error !', error));
+
+  }
+
+  getSelectedResponseDetails(token: string | undefined,
+                             questionId: number | undefined,
+                             callback: (data: SelectedResponses[]) => void) {
+
+    let url = UtilsResources.baseUrl + '/survey/client/'+ token +'/question/'+ questionId + '/responses/details';
+
+    this.httpClient.get<ResponseInterface>(url).subscribe(
+      data => {
+        if (data.statusCode == UtilsResources.SUCCESS) {
+          callback(data.response);
+        } else {
+          console.error('Not question found', data);
+        }
+      },
+      error => console.error('There was an error !', error));
+  }
 }

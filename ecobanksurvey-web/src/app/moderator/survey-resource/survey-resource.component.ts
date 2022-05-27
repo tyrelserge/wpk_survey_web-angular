@@ -6,6 +6,8 @@ import {Survey} from "../../../models/survey.model";
 import {Client, ClientSurvey, Staff} from "../../../models/user.model";
 import {AuthService} from "../../../services/auth.service";
 
+declare const acreenInit: any;
+
 @Component({
   selector: 'app-survey-resource',
   templateUrl: './survey-resource.component.html',
@@ -33,6 +35,8 @@ export class SurveyResourceComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit(): void {
+
+    acreenInit();
 
     if (!this.authService.checkAuth()) this.router.navigate(['/']);
     //this.authService.isAuth = this.authService.checkAuth();

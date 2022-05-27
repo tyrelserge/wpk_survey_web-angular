@@ -36,15 +36,23 @@
 
   <div id="content-primary">
 
-    <h3 class="survey-title mb-4">Aperçu du survey</h3>
-
+    <h3 class="survey-title mb-5">{{ action!='preview' && survey!=undefined ? survey.surveyName : 'Aperçu du survey' }}</h3>
+    <!--
+    <h5 class="">{{ action!='preview' && survey!=undefined ? 'survey.surveySubject' : 'survey.surveySubject' }}</h5>
+    <p class="mb-4">{{ action!='preview' && survey!=undefined ? 'survey.surveyDescrib' : 'survey.surveyDescrib' }}</p>
+    -->
     <div class="survey-bloc">
       <div class="survey-card">
 
         <div [hidden]="step!=0">
           <div class="survey-text"> <p>Etes-vous prêt ?</p> </div>
-          <div class="survey-suggestion"><p style="margin-top: 20px; color: #0082bb">
-              Cliquer sur démarrer pour lancer le questionnaire.</p>
+          <div class="survey-suggestion">
+
+            <h5 class="mt-4">{{ action!='preview' && survey!=undefined ? survey.surveySubject : '' }}</h5>
+            <p class="mb-4">{{ action!='preview' && survey!=undefined ? survey.surveyDescrib : '' }}</p>
+
+            <p style="margin-top: 20px; color: #0082bb">
+            Cliquer sur démarrer pour lancer le questionnaire.</p>
 
             <p class="remarque">
               NB: Vous pouvez à tout moment revenir sur une question afin de modifier votre opinion,
@@ -66,27 +74,29 @@
                 <div style="color: #0082bb" *ngFor="let suggestion of suggestedResponse; let i=index;">
 
                   <div class="form-check" *ngIf="selectedQuestion!=undefined && selectedQuestion.surveyQuestionFieldType=='radio'">
-                    <input class="form-check-input" type="radio" name="radioResponse"
-                           value="{{ suggestion.surveyResponseId }}" id="radioResponse{{i}}" [checked]="i==1? true : false" ngModel>
+                    <input class="form-check-input" type="radio" name="radioResponse" id="radioResponse{{i}}" value="{{ suggestion.surveyResponseId }}"
+                           ngModel="{{ selectedResponses[i] && selectedResponses[i].surveyResponseDetails=='true' ? selectedResponses[i].surveyResponseId : '' }}" checked>
                     <label class="form-check-label" for="radioResponse{{i}}">{{ suggestion.surveyResponseValue }}</label>
                   </div>
 
                   <div class="form-check" *ngIf="selectedQuestion!=undefined && selectedQuestion.surveyQuestionFieldType=='checkbox'">
-                    <input class="form-check-input" type="checkbox" name="{{i}}"
-                           value="{{ suggestion.surveyResponseId }}" id="checkboxResponse{{i}}" ngModel>
+                    <input class="form-check-input" type="checkbox" name="{{i}}" id="checkboxResponse{{i}}"
+                           [ngModel]="selectedResponses[i] && selectedResponses[i].surveyResponseDetails=='true' ? true : ''" checked>
                     <label class="form-check-label" for="checkboxResponse{{i}}">{{ suggestion.surveyResponseValue }}</label>
                   </div>
 
                   <div class="form-check form-switch" *ngIf="selectedQuestion!=undefined && selectedQuestion.surveyQuestionFieldType=='switch'">
                     <input class="form-check-input" type="checkbox" role="switch" name="{{i}}"
-                           value="{{ suggestion.surveyResponseId }}" id="switchResponse{{i}}" [ngModel]="false">
+                           value="{{ selectedResponses[i] && selectedResponses[i].surveyResponseDetails=='true' ? true : '' }}" id="switchResponse{{i}}"
+                           [ngModel]="selectedResponses[i] && selectedResponses[i].surveyResponseDetails=='true' ? true : ''">
                     <label for="switchResponse{{i}}">{{ suggestion.surveyResponseValue }}</label>
                   </div>
 
                   <div class="form-floating mb-3" *ngIf="selectedQuestion!=undefined && selectedQuestion.surveyQuestionFieldType=='input'">
                     <input type="text" class="form-control" name="{{i}}"
                            value="{{ suggestion.surveyResponseId }}" id="inputResponse{{i}}"
-                           placeholder="{{ suggestion.surveyResponseValue }}" value="" ngModel required>
+                           placeholder="{{ suggestion.surveyResponseValue }}"
+                           [ngModel]="selectedResponses[i] ? selectedResponses[i].surveyResponseDetails : ''" required>
                     <label for="inputResponse{{i}}">{{ suggestion.surveyResponseValue }}</label>
                   </div>
 
@@ -108,7 +118,7 @@
 
     <div class="nav-btn">
       <button class="btn btn-outline-primary btn-preview" (click)="goPreviewStep(step - 1)">{{ previewBtnText ? previewBtnText : 'Quitter' }}</button>
-      <button class="btn btn-outline-primary btn-next" (click)="onSubmitResponseClient(r)">
+      <button class="btn btn-outline-primary btn-next" [hidden]="hidenext" (click)="onSubmitResponseClient(r)">
         {{ nextBtnText ? nextBtnText : 'Démarrer' }}</button>
     </div>
   </div>

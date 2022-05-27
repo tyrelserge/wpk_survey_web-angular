@@ -9,7 +9,7 @@
 #content #content-side {
   min-width: 360px;
   border-right: 1px solid #e1e1e1;
-  height: 300px;
+  min-height: 300px;
   padding-right: 20px;
   overflow: auto;
 }
@@ -63,9 +63,6 @@
   position: absolute;
   right: 0;
 }
-
-
-
 
 .backoverlay {
   width: 100%;
