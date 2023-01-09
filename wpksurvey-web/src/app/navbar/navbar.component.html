@@ -1,0 +1,21 @@
+<nav class="navbar"></nav>
+<nav class="navbar-secondary">
+  <div class="container">
+
+    <div class="logo">
+      <img src="{{ company && company.imageFile ? company?.imageFile : './assets/img/full-logo.png' }}">
+      <h5 class="text-muted" style="display: inline-block; float: right; margin-top: 15px; margin-left: 20px">
+        | Survey Portal</h5>
+    </div>
+
+    <a href="" style="position: absolute; right: 15px; top: -30px; color: rgb(20,188,255); font-size: 0.9rem;"
+       [hidden]="!isAuth" (click)="onSignOut()">Déconnexion</a>
+
+    <div class="input-group" style="width: 240px; position:absolute; top: 20px; right: 12px;">
+      <span style="margin-right: 20px; margin-top: 5px">Langue : </span>
+      <select name="" id="" class="form-select">
+        <option value="">Francais</option>
+      </select>
+    </div>
+  </div>
+</nav>

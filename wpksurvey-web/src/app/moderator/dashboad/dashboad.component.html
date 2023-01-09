@@ -1,0 +1,60 @@
+<div id="content" class="container">
+  <h3 class="field-title mb-3">Tableau de bord</h3>
+
+  <div class="create-survey">
+    <table>
+      <tr>
+        <td class="bloc-icon">
+          <h6 style="text-align: left; margin-left: 10px; margin-bottom: 0;">Surveys</h6>
+          <div id="survey-chart"></div>
+        </td>
+        <td class="bloc-content">
+          <h5 class="bloc-title">Survey Management</h5>
+          <p>Résumé de toutes vos activités de survey.<br>Disposez d'outils d'analyse de l'évolution en temps réel des surveys créé, publié et terminé.</p>
+          <a href="#" class="btn btn-outline-primary resume-btn" routerLink="/survey/manager">
+            <span class="indicator">{{ surveyList.length }}</span>
+            <span class="label">Survey{{ this.surveyList.length>1?'s':'' }}</span>
+          </a>
+
+          <a href="#" class="btn btn-outline-primary resume-btn">
+            <span class="indicator">{{ surveyPublished.length }}</span>
+            <span class="label">Publié{{ this.surveyPublished.length>1?'s':'' }}</span>
+          </a>
+
+          <a href="#" class="btn btn-outline-primary resume-btn">
+            <span class="indicator">{{ surveyCompleted.length }}</span>
+            <span class="label">Terminé{{ this.surveyPublished.length>1?'s':'' }}</span>
+          </a>
+        </td>
+        <td class="bloc-execute" style="text-align: right">
+          <a href="#" class="btn btn-primary" routerLink="/survey/manager/new">+ Creér un survey</a>
+        </td>
+      </tr>
+  </table>
+  </div>
+
+  <div class="surveys-charts">
+    <div class="chart-bloc">
+      <h6>Surveys contacts</h6>
+      <div style="position:absolute; top: 10px; right: 10px">
+        <form>
+          <select id="interaction-survey" name="survey" class="form-select form-select-sm" aria-label=".form-select-sm">
+            <option selected value="0">-- Tous les surveys --</option>
+            <option *ngFor="let survey of surveyList" value="{{ survey.surveyId }}">{{ survey.surveyName }}</option>
+          </select>
+        </form>
+      </div>
+      <div id="interaction-chart"></div>
+    </div>
+    <div class="chart-bloc">
+      <h6>Nombre d'interactions hebdomadaire</h6>
+      <form>
+        <input type="date" id="weekly-survey" class="form-control survey-pick-date" value="{{ today | date: 'yyyy-MM-dd' }}">
+      </form>
+      <div id="weekly-chart"></div>
+    </div>
+  </div>
+
+  <div id="survey-question-charts"></div>
+
+</div>

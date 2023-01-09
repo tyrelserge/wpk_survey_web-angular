@@ -1,0 +1,31 @@
+h1, h2, h3, h4, h5, h6 { margin:0; }
+p { margin: 0; }
+
+a, a:active {
+  text-decoration: none;
+}
+
+.container {
+  position: relative;
+}
+
+.navbar {
+  height: 2.313rem;
+  background: rgba(2,52,72,1);
+}
+
+.navbar-secondary {
+  height: 80px;
+  background-color: #ffffff;
+  border-bottom: 3px solid #0082bb;
+  /*background: #0082bb;*/
+}
+
+.navbar-secondary .logo {
+  display: inline-block; margin-top: 10px;
+}
+
+.navbar-secondary .logo img {
+  height: 52px;
+}
+

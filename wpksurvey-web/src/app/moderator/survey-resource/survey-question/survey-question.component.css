@@ -1,0 +1,239 @@
+#content{
+  display: flex;
+  min-height: 300px;
+  padding-top: 20px;
+  font-size: 0.9em;
+}
+
+#content #content-side {
+  border-right: 1px solid #e1e1e1;
+  min-height: 300px;
+  width: 40%;
+  padding-right: 20px;
+  overflow: auto;
+}
+
+#content #content-primary {
+  width: 60%;
+  padding-left: 20px;
+}
+
+#content #content-side .survey-item {
+
+}
+
+#content #content-side .question-add {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#content #content-side .question-item {
+  background: #0082bb;
+  margin-bottom: 10px;
+  padding: 7px 10px;
+  border-radius: 5px;
+}
+
+#content #content-side .question-item a{
+  display: block;
+  text-decoration: none;
+  width: 100%;
+}
+
+#content #content-side .question-item a .question{
+  color: #ffffff;
+}
+
+#content #content-side .question-item a .subject{
+  color: #a5e8ff;
+}
+
+#content #content-side .question-item.active{
+  background: #ffffff;
+  margin-bottom: 10px;
+  padding: 7px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid #5fa9e8;
+}
+#content #content-side .question-item.active a .question {
+  color: #0d6efd;
+  font-weight: bold;
+}
+#content #content-side .question-item.active a .subject {
+  color: #aaaaaa;
+}
+
+
+.survey-option {
+  /* border-bottom: 1px solid #d5d5d5; */
+}
+
+.survey-option button, .survey-option a {
+  margin-right: 10px; margin-bottom: 20px;
+  font-size: 1em;
+}
+
+.empty-item {
+  color: #939393;
+  text-align: center;
+}
+
+.field-title {
+  font-variant-caps: small-caps;
+  position: relative;
+  font-size: 1.3rem;
+}
+
+.field-title a.btn {
+  position: absolute;
+  right: 0;
+  font-size: 0.9rem;
+}
+
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.radio-group .form-check {
+  margin-bottom: 20px;
+  display: inline-block;
+  margin-right: 10px;
+  width: 328px;
+}
+
+.form-check input.form-check-input {
+  margin-right: 15px;
+}
+
+.form-check label.form-check-label {
+  border: 1px solid #e1e1e1;
+  border-radius: 10px;
+  margin-top: -20px;
+  padding: 3px 20px 5px 10px;
+}
+
+.field-radiobox {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 20px;
+  border: 1px solid #939393;
+  margin-right: 10px;
+  margin-bottom: -2px;
+  background: #f5f5f5;
+}
+
+.field-checkbox {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 2px;
+  border: 1px solid #939393;
+  margin-right: 10px;
+  margin-bottom: -2px;
+  background: #f5f5f5;
+}
+
+.field-text {
+  display: inline-block;
+  width: 68px;
+  height: 20px;
+  border-radius: 2px;
+  border: 1px solid #b4b4b4;
+  margin-right: 10px;
+  margin-bottom: -4px;
+  background: #f5f5f5;
+}
+
+.field-text.field-select {
+  background: #f5f5f5 url('../../../../assets/img/arrow_drop_down.png') right center no-repeat;
+}
+
+.preview-bloc {
+  border: 1px solid #e1e1e1;
+  border-radius: 2px;
+  background: #fcfcfc;
+  padding: 10px;
+}
+
+.preview-bloc .preview-question strong {
+  color: #0a5ca3;
+  margin: 0
+}
+
+.preview-bloc .preview-response .form-check {
+  margin-bottom: 12px;
+}
+
+.preview-bloc .preview-response .form-check label {
+
+}
+
+.fields-group {
+  margin-top: 20px;
+}
+
+.address-list {
+
+}
+
+.address-items {
+  margin-bottom: 40px;
+}
+
+.address-items h6 {
+  margin-bottom: 20px;
+}
+
+.address-items table {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.address-items table thead{
+  font-weight: bold;
+}
+
+.address-items table tr {
+  height: 40px;
+  border-bottom: 1px solid #b4b4b4;
+}
+
+.save-bar {height: 40px; margin-top: 20px;}
+.save-bar label{ float: left; margin-right: 10px; margin-top: 5px}
+.save-bar input.field-date { display: inline-block; width: 160px; margin-right: 20px }
+
+.backoverlay {
+  width: 100%;
+  height: 100%;
+  position: fixed; top: 0; left: 0;
+  background: rgba(1,1,1,0.5);
+}
+
+.floatbox {
+  min-width: 380px;
+  background: #f3f3f3;
+  position: fixed; top: 35%; left: 38%;
+}
+.floatbox .bxtitle {
+  width: 100%;
+  padding: 10px;
+  background: #0082bb;
+  color: #f3f3f3;
+}
+
+.floatbox .bxcontent {
+  min-height: 40px;
+  margin: 20px 10px 10px 10px;
+  text-align: center;
+}
+
+.floatbox .bxbtn {
+  text-align: center; margin-bottom: 10px;
+}
+
+.floatbox .btn {
+  width: 120px; margin: 10px;
+}

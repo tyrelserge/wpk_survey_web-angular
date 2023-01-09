@@ -1,0 +1,128 @@
+<div class="banner"></div>
+
+<div id="content" class="container">
+
+  <div id="content-side" >
+
+    <div class="bloc-item active">
+      <div class="item-surround">
+        <div class="item">?</div>
+      </div>
+      <div class="item-text" style="top: 10px">
+        <p>Demarrer</p>
+      </div>
+    </div>
+
+    <div *ngFor="let question of surveyQuestionList; let i=index;">
+      <div class="bloc-item" [ngClass]="{'active': step>=i+1 }">
+        <div class="item-line"></div>
+        <div class="item-surround">
+          <div class="item">{{ i + 1 }}</div>
+        </div>
+        <div class="item-text">
+          <p>{{ question.surveyQuestionSubject }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bloc-item" [ngClass]="{'active': step>surveyQuestionList.length }">
+      <div class="item-line"></div>
+      <div class="item-surround">
+        <div class="item">Fin</div>
+      </div>
+      <div class="item-text" style="top: 48px">
+        <p>Terminé</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="content-primary">
+
+    <div class="survey-bloc">
+
+      <h3 class="survey-title">{{ survey?.surveyName ? survey?.surveyName : action!='preview' ? 'Aperçu du survey' : '' }}</h3>
+
+      <p class="text-muted">{{ survey ? survey.surveySubject : '' }}</p>
+
+      <div class="survey-card mt-4">
+
+        <div [hidden]="step!=0">
+          <div class="survey-text"> <p>Etes-vous prêt ?</p> </div>
+          <div class="survey-suggestion">
+
+            <p class="mt-4 mb-4">{{ survey && survey.surveyDescrib ? survey.surveyDescrib : action!='preview' ? 'Aucune description' : '' }}</p>
+
+            <p class="remarque">
+              NB: Vous pouvez à tout moment revenir sur une question afin de modifier votre opinion,
+              tant que le questionnaire n'est pas terminé.
+              Notez qu'une fois soumis, aucune autre modification ne sera possible.
+            </p>
+
+            <p style="margin-top: 20px; color: #0082bb">Cliquer sur démarrer pour lancer le questionnaire.</p>
+          </div>
+        </div>
+
+        <div [hidden]="!step || surveyQuestionList.length<step">
+          <div class="survey-text">
+            <p>{{ selectedQuestion!=undefined ? selectedQuestion.surveyQuestionContent : ''}}</p>
+          </div>
+          <div class="survey-suggestion">
+            <div >
+
+              <form (ngSubmit)="onSubmitResponseClient(r)" #r="ngForm" style="margin: 20px 0;">
+
+                <div style="color: #0082bb" *ngFor="let suggestion of suggestedResponse; let i=index;">
+
+                  <div class="form-check" *ngIf="selectedQuestion!=undefined && selectedQuestion.surveyQuestionFieldType=='radio'">
+                    <input class="form-check-input" type="radio" name="radioResponse" id="radioResponse{{i}}" value="{{ suggestion.surveyResponseId }}"
+                           ngModel="{{ selectedResponses[i] && selectedResponses[i].surveyResponseDetails=='true' ? selectedResponses[i].surveyResponseId : '' }}" checked>
+                    <label class="form-check-label" for="radioResponse{{i}}">{{ suggestion.surveyResponseValue }}</label>
+                  </div>
+
+                  <div class="form-check" *ngIf="selectedQuestion!=undefined && selectedQuestion.surveyQuestionFieldType=='checkbox'">
+                    <input class="form-check-input" type="checkbox" name="{{i}}" id="checkboxResponse{{i}}"
+                           [ngModel]="selectedResponses[i] && selectedResponses[i].surveyResponseDetails=='true' ? true : ''" checked>
+                    <label class="form-check-label" for="checkboxResponse{{i}}">{{ suggestion.surveyResponseValue }}</label>
+                  </div>
+
+                  <div class="form-check form-switch" *ngIf="selectedQuestion!=undefined && selectedQuestion.surveyQuestionFieldType=='switch'">
+                    <input class="form-check-input" type="checkbox" role="switch" name="{{i}}"
+                           value="{{ selectedResponses[i] && selectedResponses[i].surveyResponseDetails=='true' ? true : '' }}" id="switchResponse{{i}}"
+                           [ngModel]="selectedResponses[i] && selectedResponses[i].surveyResponseDetails=='true' ? true : ''">
+                    <label for="switchResponse{{i}}">{{ suggestion.surveyResponseValue }}</label>
+                  </div>
+
+                  <div class="form-floating mb-3" *ngIf="selectedQuestion!=undefined && selectedQuestion.surveyQuestionFieldType=='input'">
+                    <input type="text" class="form-control" name="{{i}}"
+                           value="{{ suggestion.surveyResponseId }}" id="inputResponse{{i}}"
+                           placeholder="{{ suggestion.surveyResponseValue }}"
+                           [ngModel]="selectedResponses[i] ? selectedResponses[i].surveyResponseDetails : ''" required>
+                    <label for="inputResponse{{i}}">{{ suggestion.surveyResponseValue }}</label>
+                  </div>
+
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div [hidden]="step==0 || step <= surveyQuestionList.length">
+          <div class="survey-text"><p>Terminé</p> </div>
+          <div class="survey-suggestion">
+            <p style="margin-top: 20px; text-align: center; color: #0082bb">Merci de votre participation.</p>
+          </div>
+        </div>
+
+        <div class="nav-btn mt-5">
+          <button class="btn btn-outline-primary btn-preview" (click)="goPreviewStep(step - 1)">
+            {{ previewBtnText ? previewBtnText : 'Quitter' }}</button>
+          <button class="btn btn-outline-primary btn-next" [hidden]="hidenext" (click)="onSubmitResponseClient(r)">
+            {{ nextBtnText ? nextBtnText : 'Démarrer' }}</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>

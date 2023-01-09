@@ -1,0 +1,75 @@
+<div id="content" class="container">
+  <div id="content-side">
+    <div style="height: 45px; line-height: 35px; margin-bottom: 10px; color: #939393; border-bottom: 1px solid #5fa9e8">
+      List des surveys :
+      <a href="#" class="btn btn-outline-primary" routerLink="/dashboard" style="float: right; font-size: 0.9rem;">Tableau de bord</a></div>
+    <div *ngIf="isEmptySurveyList" class="empty-item">Aucun item</div>
+    <div *ngFor="let survey of surveyList" class="survey-item">
+      <a href="" routerLink="/survey/{{ survey.surveyId }}/question">
+        <strong>{{ survey.surveyName }}</strong> <br>
+        <span>{{ survey.surveySubject }}</span>
+      </a>
+    </div>
+
+  </div>
+
+  <div id="content-primary">
+
+    <div [hidden]="action && action=='new'">
+      <a href="" routerLink="/survey/manager/new" class="btn btn-primary">Créer un nouveau</a>
+    </div>
+
+    <div [hidden]="!action || action!='new'" style="position: relative">
+
+      <h2 class="field-title mb-5">Créer nouveau</h2>
+
+      <a href="" routerLink="/survey/manager" class="btn btn-outline-danger" style="position: absolute; right: 2px; top: 0">Annuler</a>
+
+      <form (ngSubmit)="onSurveySubmit(s)" #s="ngForm">
+
+        <div class="mb-3">
+          <input type="hidden" name="companyCode" class="form-control" placeholder="Code de société"
+                 ngModel="{{ staff?.companyId }}" required readonly>
+        </div>
+
+        <div class="mb-3">
+
+          <div class="form-floating mb-3">
+            <input type="text" name="surveyname" id="surveyname" class="form-control" placeholder="Nom du survey" ngModel required>
+            <label for="surveyname">Nom du survey</label>
+          </div>
+        </div>
+
+        <div class="fields-group">
+          <div class="form-floating mb-3">
+            <input type="text" name="surveysubject" class="form-control" id="subject" placeholder="Objet du survey" ngModel required>
+            <label for="subject">Objet du survey (obligatoire)</label>
+          </div>
+        </div>
+
+        <div class="form-floating mb-3">
+        <textarea cols="30" rows="10" name="surveydescrib" class="form-control" id="describ"
+                  placeholder="Description du survey" style="height: 100px" ngModel></textarea>
+          <label for="describ">Description du survey (facultatif)</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary survey-add" [disabled]="s.invalid"
+                style="float: right; width: 120px">Créer</button>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+<div class="dialogbox" [hidden]="!displayBox">
+  <div class="backoverlay" (click)="onCancel()"></div>
+  <div class="floatbox">
+    <div class="bxtitle">{{ bxTitle }}</div>
+    <div class="bxcontent"> {{ bxContent }} </div>
+    <div class="bxbtn">
+      <button class="btn btn-outline-primary" (click)="onCancel()">Non</button>
+      <button class="btn btn-danger" (click)="onConfirm()">Oui</button>
+    </div>
+  </div>
+</div>
